@@ -1,0 +1,96 @@
+1. Check Python Version --> python3 --version
+2. Check Pip version   -->  pip --version
+
+3. Update Linax Installed app --> sudo apt update
+4. Install Virtual Environment --> sudo apt install python3.12-venv
+
+5. Create the virtual environment --> python3 -m venv env
+6. Active Virtual Environment --> source env/bin/activate
+7. Deactivate Virtual Environment --> deactivate
+
+8. # Install Django and Django REST framework into the virtual environment
+pip install djangorestframework
+
+9. # Set up a new project with a single application
+django-admin startproject myProject
+cd myProject
+
+10. # Create a Django App
+python manage.py startapp myapp
+
+11. # Make Migrations
+python manage.py makemigrations
+python manage.py migrate
+
+12. # Create Superuser
+python manage.py createsuperuser
+
+13. # Run Server
+python manage.py runserver
+
+14.# Add 'rest_framework' to your INSTALLED_APPS setting.
+        
+        INSTALLED_APPS = [
+            ...
+            'rest_framework',
+        ]
+
+15. # f you're intending to use the browsable API you'll probably also want to add REST framework's login and logout views. Add the following to your root urls.py file.
+        
+        urlpatterns = [
+            ...
+            path('api-auth/', include('rest_framework.urls'))
+        ]
+
+16. # Create model
+
+        from django.db import models
+        class Book(models.Model):
+            name = models.CharField(max_length=255)
+            author = models.CharField(max_length=255)
+            def __str__(self):
+                return f"{self.name} by {self.author}"
+
+17. # Model Register in admin.py file
+
+        from django.contrib import admin
+        from .models import Book
+
+        @admin.register(Book)
+        class BookAdmin(admin.ModelAdmin):
+            list_display = ('id', 'name', 'author')
+
+    
+18. # serializers.py
+
+        from rest_framework import serializers
+        from .models import Book
+
+        class BookSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = Book
+                fields = '__all__
+
+19. # views.py (Using DRF's ModelViewSet)
+
+        from rest_framework import viewsets
+        from .models import Book
+        from .serializers import BookSerializer
+
+        class BookViewSet(viewsets.ModelViewSet):
+            queryset = Book.objects.all()
+            serializer_class = BookSerializer
+
+20. # urls.py (App-level routing)
+        from django.urls import path, include
+        from rest_framework.routers import DefaultRouter
+        from .views import BookViewSet
+
+        router = DefaultRouter()
+        router.register(r'books', BookViewSet)
+
+        urlpatterns = [
+            path('', include(router.urls)),
+        ]
+
+

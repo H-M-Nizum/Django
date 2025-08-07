@@ -1,0 +1,199 @@
+1) DRF :- Django REST framework(DRF) is a powrful and flexible toolkit for building web API. DRF is based on django's class-based views.
+2) API :- Application programming interface is a software intermediary that allows two or more applications to talk to each other.
+	API Type in terms of release policies:-
+	a) Private - It can be used within the organization.
+	b) Partner - It can be used within Business partners.
+	c) Public - It can be used any third party Developers.
+3) Web API :- A web API is an application programming interface for the web.
+3.1) REST :- Representational State Transfer (REST) refers to a group of software architecture design constraints that bring
+			 about efficient, reliable and scalable systems. It is an architectural guideline to develop web API.
+
+(REST resource as a librarian and the API as the language used to talk to them. )
+3.2) REST API :- The API which is developed using REST is know as REST API or RESTfull API.
+
+4) Serializer :- Serializer allow complex data such as querysets and model instances to be converted to native python datatypes
+		that can then be easily rendered into JSON, XML or other content.(complex data convert native python datatype)
+	Python Json :- Python has a built in package called json, which is used to work with json data.
+		a) dumps(data) : This is used to convert python object into json string.
+		b) loads(data) : This is used to parse json string.(convert json to python object)
+
+	 Complex Data ==>> Native python Datatype ==>> JSON data
+				(Serializer)		(Render into Json)
+
+	a} complex_Data = model_name.Objects.all()
+	b} complex_to_nativePythonData = Serializer_name(complex_Data)
+	c} native_to_JSONdata = JSONRenderer().render(complex_to_nativePythonData.data)
+
+5) JOSN :- stands for javaScript Object Notation. Json is often used When data is sent from a server to a web page.
+	Ex :- {"username":"aaa", "password":"1234"}
+
+6) Deserialization :- The process of converting vative python datatypes such as dictionaries to complex data types 
+	such as querysets is called deserialization. Serializers also provide deserialization, Allowing parsed
+	data to be converted back into complex types, ager first validating the incoming data.
+(parse data to convert complex data type)
+
+
+	JSON data ==>> Native Python Datatype ==>> Complex datatype
+			(parse data)		(deserialization)
+	a) BytesIO() :- 
+		import io
+		stream = io.BytesIO(json_data)
+	b) JSONParser() :- This is used to parse json data to python natice data type.
+		from rest_framework.parsers import JSONParser
+		parsed_data = JSONParser().parse(stream)
+	c) De-serialization :- paesed data to be converted into complex type.
+		i) creating serializer object - serializer = serializer_name(data = parsed_data)
+		ii) Validation check - seializer.is_valid()
+			(serializer.validated_data / serializer.errors)
+
+7) Validation :- There are three waye to write validation.
+	a) Field Level Validation : We can specify custom field-level validation by adding
+		validate_fieldName methods to your serializer subclass.
+		This are similar to the clean_fieldName methods on Django forms.
+		Return validated value or validationError.
+		syntax:- def validate_fieldname(self, value) Where value is the field value that requires validation
+		This Method is Automatically invoked or call when is_valid() method is called.
+	b) Object Level Validation : When we need to do validation that requires access to multiple fields,
+			we do object level validation by adding a method called validate() to serializer subclass.
+			It raise a serializers. validationError if necessary, or just return the validated values.
+			Syntax :- def validate(self, data), where data is a dictionary of field values.
+	c) Validatiors :- Most of the time i dealing with Validation in REST framework i simply be relying
+			on the default field va lidation. or writing explicit validation methods on serializer or field classes.
+			However, sometimes i want to place i validation logic into resuable components, so that it can easily, 
+			be reused throughtout i codebase. This can be achieved by using validator functions and validator classes.
+
+		Priority - Validatiors > field level validator > object level validator.
+
+8) ModelSerializer class : The ModelSerializer class provides a shotcut that lets you automatically create a 
+		serializer class with fields that correspond to the Model fields.
+		. It will automatically generate a set of fields for you, based on the model.
+		. It will automatically generate validators for the serializer, such as unique_together validators.
+		. It includes simple default implementations of create() and update().
+
+		#class StudentSerializers(serializers.ModelSerializer):
+			#class Meta:
+				#model = StudentModel
+				#fields = ['student_name', 'class_name', 'age', 'roll']
+				## fields = '__all__'  # Mean all fields in studentModel
+
+9) APIView :-
+	a) Function based APIView : This wrapper provide a few bits of functionality such as making sure you receive Request
+			instances in your view, and adding context to Response objects so that content negotiation can be performed.
+			.The wrapper also provide behaviour such as returning 405 Method Not Allowed responses when appropriate, and
+			handling any ParseError exceptions that occur when accessing request.data with malformed input.
+			.By default only GET method will be accepted. Other methods will respond with "405 Method Not Allowed"
+				@api_view()
+
+			. Example-
+				@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+				def function_name(request):
+					...................
+	
+	b)Class based APIView : REST framework provides an APIView class, which subclass Django's view class.
+
+10) GenericAPIView :- This class extends REST framework's APIView class, adding commonly required behavior for standard 
+		list and detail views. 
+		# Attributes --------
+			queryset - The queryset that should be used for returning objects from this view. Typically, you must 
+				either set this attribute, or override the get_queryset() method. If you are overriding a view method, 
+				it is important that you call get_queryset() instead of accessing this property directly, as queryset will 
+				get evaluated once, and those results will be cached for all subsequent requests. 
+
+			serializer_class - The serializer class that should be used for validating and deserializing input, and for 
+				serializing output. Typically, you must either set this attribute, or override the get_serializer_class() method.
+			
+			lookup_field - The model field that should be used to for performing object lookup of individual model instances. 
+				Defaults to 'pk'. 
+
+			lookup_url_kwarg - The URL keyword argument that should be used for object lookup. The URL conf should include 
+				a keyword argument corresponding to this value. If unset this defaults to using the same value as lookup_field. 
+			
+			pagination_class - The pagination class that should be used when paginating list results. Defaults to the same 
+				value as the DEFAULT_PAGINATION_CLASS setting, which is 'rest_framework.pagination.PageNumberPagination'. 
+				Setting pagination_class=None will disable pagination on this view. 
+
+			filter_backends - A list of filter backend classes that should be used for filtering the queryset. 
+				Defaults to the same value as the DEFAULT_FILTER_BACKENDS setting.
+		
+		
+		# Methods -----------
+			get_queryset(self) - It returns the queryset that should be used for list views, and that should be 
+				used as the base for lookups in detail views. Defaults to returning the queryset specified by the 
+				queryset attribute. This method should always be used rather than accessing self.queryset directly, 
+				as self.queryset gets evaluated only once, and those results are cached for all subsequent requests.
+
+			get_object(self) - It returns an object instance that should be used for detail views. Defaults to using the
+				lookup_field parameter to filter the base queryset. 
+				
+			get_serializer_class(self) - It returns the class that should be used for the serializer. Defaults to returning 
+				the serializer_class attribute.
+
+			get_serializer_context(self) – It returns a dictionary containing any extra context that should be supplied 
+				to the serializer. Defaults to including 'request', 'view' and 'format' keys. 
+			
+			get_serializer(self, instance=None, data=None, many=False, partial=False) – It returns a serializer instance. 
+			
+			get_paginated_response(self, data) – It returns a paginated style Response object. 
+			
+			paginate_queryset(self, queryset) - Paginate a queryset if required, either returning a page object, 
+				or None if pagination is not configured for this view.
+
+			filter_queryset(self, queryset) - Given a queryset, filter it with whichever filter backends are in use, returning a new queryset.
+
+
+11) Mixins :-  
+	. One of the big wins of using class-based views is that it allows us to easily compose reusable bits of behaviour. 
+	. The create/retrieve/update/delete operations that we've been using so far are going to be pretty similar for any model-backed API views we create. 
+	. Those bits of common behaviour are implemented in REST framework's mixin classes. 
+	. The mixin classes provide the actions that are used to provide the basic view behavior. 
+	. Note that the mixin classes provide action methods rather than defining the handler methods, 
+		such as get() and post(), directly. This allows for more flexible composition of behavior. 
+	. The mixin classes can be imported from rest_framework.mixins 
+
+	. *There are Five mixins class -
+		 • ListModelMixin • CreateModelMixin • RetrieveModelMixin • UpdateModelMixin • DestroyModelMixin
+
+12) Concrete View Class :- 
+	The following classes are the concrete generic views. 
+	If you're using generic views this is normally the level you'll be working at unless you need heavily customized behavior. 
+	The view classes can be imported from rest_framework.generics 
+		• ListAPIView • CreateAPIView • RetrieveAPIView • UpdateAPIView • DestroyAPIView 
+		• ListCreateAPIView • RetrieveUpdateAPIView · RetrieveDestroyAPIView · RetrieveUpdateDestroyAPIView
+	
+13) ViewSet :- Django REST framework allows you to combine the logic for a set of related views in a single class, 
+	called a ViewSet. 
+	There are two main advantages of using a ViewSet over using a View class. 
+		• Repeated logic can be combined into a single class. 
+		• By using routers, we no longer need to deal with wiring up the URL conf ourselves.
+	A ViewSet class is simply a type of class-based View, that does not provide any method handlers 
+	such as get() or post(), and instead provides actions such as list() and create()
+		. list() - Get All Records
+		. retrieve) - Get Single Record 
+		. create() Create/Insert Record 
+		. update() - Update Record Completely 
+		. partial_update() – Update Record Partially 
+		. destroy() - Delete Record
+	During dispatch, the following attributes are available on the ViewSet:- 
+		• basename - the base to use for the URL names that are created. 
+		• action - the name of the current action (e.g., list, create).
+		• detail - boolean indicating if the current action is configured for a list or detail view. 
+		• suffix - the display suffix for the viewset type - mirrors the detail attribute. 
+		• name - the display name for the viewset. This argument is mutually exclusive to suffix. 
+		• description - the display description for the individual view of a viewset.
+
+14) ModelViewSet Class :- The ModelViewSet class inherits from GenericAPIView and includes implementations 
+		for various actions, by mixing in the behavior of the various mixin classes. 
+		. The actions provided by the ModelViewSet class are list(), retrieve(), create(), update(), partial_update(), and destroy(). 
+			You can use any of the standard attributes or method overrides provided by GenericAPIView. 
+			Example :-
+				class StudentViewSet(viewsets.ModelViewSet): 
+					queryset = Student.objects.all() 
+					serializer_class = StudentSerializer
+
+15) ReadOnlyModelViewSet Class :- The ReadOnlyModelViewSet class also inherits from GenericAPIView. As with ModelViewSet it also includes 
+		implementations for various actions, but unlike ModelViewSet only provides the 'read-only' actions, list() and retrieve(). 
+		. You can use any of the standard attributes and method overrides available to GenericAPIView. 
+		Example - 
+			class StudentReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet): 
+				queryset = Student.objects.all() 
+				serializer_class = StudentSerializer
