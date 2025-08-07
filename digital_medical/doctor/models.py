@@ -3,10 +3,10 @@ from django.db import models
 class DoctorModel(models.Model):
     name = models.CharField(max_length=250)
     designation = models.CharField(max_length=250, blank=True, null=True)
-    email = models.EmailField(max_length=250)
+    email = models.EmailField(max_length=250, unique=True)
     phone = models.CharField(max_length=12)
     age = models.IntegerField()
-    
+
     # max_length=250: Maximum 250 characters.
     # blank=True: Allows this field to be blank in forms (not required).
     # null=True: Allows NULL in the database.
