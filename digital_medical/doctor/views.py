@@ -65,6 +65,10 @@ def createDoctorView(request):
         else:
             response_data = JSONRenderer().render({"msg" : "Validation Error", "error" : serializer_data.errors})
         return HttpResponse(response_data, content_type='application/json')
+    
+    else:
+        response_data = JSONRenderer().render({"msg" : "Invalid Request Method"})
+        return HttpResponse(response_data, content_type='application/json')
 
 
 @csrf_exempt
@@ -95,5 +99,25 @@ def updateDoctorView(request, pk):
             response_data = JSONRenderer().render({"msg" : "Successfully Update a Doctor instance"})
         else:
             response_data = JSONRenderer().render({"msg" : "Validation Error", "error" : serializer_data.errors})
+        return HttpResponse(response_data, content_type='application/json')
+    
+    else:
+        response_data = JSONRenderer().render({"msg" : "Invalid Request Method"})
+        return HttpResponse(response_data, content_type='application/json')
+    
+
+@csrf_exempt
+def deleteDoctView(request, pk):
+    if request.method == "DELETE":
+        ex_data = DoctorModel.objects.get(id=pk)
+        if ex_data:
+            ex_data.delete()
+            response_data = JSONRenderer().render({"msg" : "Successfully Delete a Doctor instance"})
+        else:
+            response_data = JSONRenderer().render({"msg" : "This is Invalid Doctor indatance id"})
+
+        return HttpResponse(response_data, content_type='application/json')
+    else:
+        response_data = JSONRenderer().render({"msg" : "Invalid Request Method"})
         return HttpResponse(response_data, content_type='application/json')
 
