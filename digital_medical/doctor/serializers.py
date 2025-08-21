@@ -23,3 +23,15 @@ class DoctorSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         return DoctorModel.objects.create(**validated_data)
+    
+    # Update
+    def update(self, instance, validated_data):
+        # return super().update(instance, validated_data)()
+        instance.name = validated_data.get("name", instance.name)
+        instance.designation = validated_data.get("designation", instance.designation)
+        instance.email = validated_data.get("email", instance.email)
+        instance.phone = validated_data.get("phone", instance.phone)
+        instance.age = validated_data.get("age", instance.age)
+
+        instance.save()
+        return instance

@@ -41,27 +41,59 @@ def doctorInstanceView(request, pk):
 
 @csrf_exempt
 def createDoctorView(request):
-    # Json data or request body data
-    json_data = request.body
-    print("json data : ", json_data)
+    if request.method == "POST":
+        # Json data or request body data
+        json_data = request.body
+        print("json data : ", json_data)
 
-    # json to Stream Data
-    stream_data = io.BytesIO(json_data)
-    print("stream Data : ", stream_data)
+        # json to Stream Data
+        stream_data = io.BytesIO(json_data)
+        print("stream Data : ", stream_data)
 
-    # Stream to python data
-    python_data = JSONParser().parse(stream_data)
-    print("python data : ", python_data)
+        # Stream to python data
+        python_data = JSONParser().parse(stream_data)
+        print("python data : ", python_data)
 
-    # Python to complex data
-    serializer_data = DoctorSerializer(data=python_data)
-    print("Serializer Data : ", serializer_data)
+        # Python to complex data
+        serializer_data = DoctorSerializer(data=python_data)
+        print("Serializer Data : ", serializer_data)
 
-    # Validation check
-    if serializer_data.is_valid():
-        serializer_data.save()
-        response_data = JSONRenderer().render({"msg" : "Successfully Create a Doctor instance"})
-    else:
-        response_data = JSONRenderer().render({"msg" : "Validation Error", "error" : serializer_data.errors})
-    return HttpResponse(response_data, content_type='application/json')
+        # Validation check
+        if serializer_data.is_valid():
+            serializer_data.save()
+            response_data = JSONRenderer().render({"msg" : "Successfully Create a Doctor instance"})
+        else:
+            response_data = JSONRenderer().render({"msg" : "Validation Error", "error" : serializer_data.errors})
+        return HttpResponse(response_data, content_type='application/json')
+
+
+@csrf_exempt
+def updateDoctorView(request, pk):
+    if request.method == "PUT":
+        # Json data or request body data
+        json_data = request.body
+        print("json data : ", json_data)
+
+        # json to Stream Data
+        stream_data = io.BytesIO(json_data)
+        print("stream Data : ", stream_data)
+
+        # Stream to python data
+        python_data = JSONParser().parse(stream_data)
+        print("python data : ", python_data)
+
+        doctor_instance = DoctorModel.objects.get(id = pk)
+
+        # Python to complex data
+        serializer_data = DoctorSerializer(doctor_instance, data=python_data, partial = True)
+        print("Serializer Data : ", serializer_data)
+
+
+         # Validation check
+        if serializer_data.is_valid():
+            serializer_data.save()
+            response_data = JSONRenderer().render({"msg" : "Successfully Update a Doctor instance"})
+        else:
+            response_data = JSONRenderer().render({"msg" : "Validation Error", "error" : serializer_data.errors})
+        return HttpResponse(response_data, content_type='application/json')
 
