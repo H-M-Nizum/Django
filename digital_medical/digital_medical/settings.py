@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     # Created-app
     'doctor',
-    'books'
+    'books',
+    'students'
 ]
 
 MIDDLEWARE = [
