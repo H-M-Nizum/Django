@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     # Created-app
     'doctor',
     'books',
-    'students'
+    'students',
+    'products'
 ]
 
 MIDDLEWARE = [
