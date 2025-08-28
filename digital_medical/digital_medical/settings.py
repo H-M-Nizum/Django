@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'students',
     'products',
     'teachers',
-    'auth'
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -81,6 +81,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'digital_medical.wsgi.application'
 
+# Setting for Custom User Model - 'appName.customModelName'
+AUTH_USER_MODEL = 'accounts.User'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

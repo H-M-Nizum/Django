@@ -18,5 +18,5 @@ urlpatterns = [
     path('students/', include('students.urls')),
     path('products/', include('products.urls')),
     path('teachers/', include('teachers.urls')),
-    path('auth/', include('auth.urls'))
+    path('api/auth/', include('accounts.urls'))
 ]
