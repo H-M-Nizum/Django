@@ -1,3 +1,32 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .serializers import UserRegisterSerializers, UserLoginSerializers
+from django.contrib.auth import authenticate
 
-# Create your views here.
+# View for Register
+class UserRegistrationViews(APIView):
+    def post(self, request, format=None):
+        serializer_data = UserRegisterSerializers(data = request.data)
+        if serializer_data.is_valid(raise_exception=True):
+            serializer_data.save()
+            return Response({'status': 'success', 'msg': 'User Registration Successfully Complete', 'data' : serializer_data.data}, status=status.HTTP_201_CREATED)
+        return Response({'status': 'error', 'msg' : 'Failed to Register User', 'error' : serializer_data.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+# View for Login
+class UserLoginViews(APIView):
+    def post(self, request, format=None):
+        serializers_data = UserLoginSerializers(data = request.data)
+        if serializers_data.is_valid(raise_exception=True):
+            email = serializers_data.data.get("email")
+            password = serializers_data.data.get("password")
+            
+            user = authenticate(email=email, password=password)
+            if user is not None:
+                return Response({'status': 'success', 'msg': 'User Login Successfully Complete'}, status=status.HTTP_200_OK)
+            else:
+                return Response({'status': 'error', 'msg': 'Failed to User Login', 'error' : {'non_field_error' : 'Email or Password is not valid'}}, status=status.HTTP_404_NOT_FOUND)
+
+
+        return Response({'status': 'error', 'msg': serializers_data.errors}, status=status.HTTP_400_BAD_REQUEST)
