@@ -32,3 +32,9 @@ class UserLoginSerializers(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'password']
+
+class UserProfileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'full_name', 'phone_number', 't_c', 'address']
+        read_only_fields = ['created_at', 'updated_at']

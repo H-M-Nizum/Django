@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserRegisterSerializers, UserLoginSerializers
+from .serializers import UserRegisterSerializers, UserLoginSerializers, UserProfileSerializers
 from django.contrib.auth import authenticate
 from .renderers import UserRenderers
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
+from .models import User
+from rest_framework.permissions import IsAuthenticated
 
 # Creating tokens manually
 def get_tokens_for_user(user):
@@ -48,3 +50,16 @@ class UserLoginViews(APIView):
 
 
         return Response({'status': 'error', 'msg': serializers_data.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# User Profile View
+class UserProfileView(APIView):
+    renderer_classes = [UserRenderers]
+    permission_classes = [IsAuthenticated]
+    def get(self, request, format=None):
+        try:
+            serializer_data = UserProfileSerializers(request.user)
+            return Response({'status': 'success', 'msg': 'User find Successfully', 'data': serializer_data.data}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'status': 'error', "msg" :"No User found.", "errors" :{"detail": "No students available."}}, status=status.HTTP_404_NOT_FOUND)
+            
