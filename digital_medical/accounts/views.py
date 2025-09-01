@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserRegisterSerializers, UserLoginSerializers, UserProfileSerializers
+from .serializers import UserRegisterSerializers, UserLoginSerializers, UserProfileSerializers, UserChangePasswordSerializers, sendPasswordResetEmailSerializer
 from django.contrib.auth import authenticate
 from .renderers import UserRenderers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -20,6 +20,7 @@ def get_tokens_for_user(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
+
 # View for Register
 class UserRegistrationViews(APIView):
     renderer_classes = [UserRenderers]
@@ -62,4 +63,15 @@ class UserProfileView(APIView):
             return Response({'status': 'success', 'msg': 'User find Successfully', 'data': serializer_data.data}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'status': 'error', "msg" :"No User found.", "errors" :{"detail": "No students available."}}, status=status.HTTP_404_NOT_FOUND)
-            
+        
+# Change Password View
+class UserChangePasswordView(APIView):
+    renderer_classes = [UserRenderers]
+    permission_classes = [IsAuthenticated]
+    def post(self, request, format=None):
+        serializer_data = UserChangePasswordSerializers(data= request.data, context={'user': request.user})      
+        if serializer_data.is_valid(raise_exception=True):
+            return Response({'status': 'success', 'msg': 'User Successfully Change Password', 'data' : serializer_data.data}, status=status.HTTP_200_OK)
+        return Response({'status': 'error', 'msg' : 'Failed to Change Password', 'error' : serializer_data.errors}, status=status.HTTP_400_BAD_REQUEST)      
+
+
