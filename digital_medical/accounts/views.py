@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserRegisterSerializers, UserLoginSerializers, UserProfileSerializers, UserChangePasswordSerializers, sendPasswordResetEmailSerializer
+from .serializers import UserRegisterSerializers, UserLoginSerializers, UserProfileSerializers, UserChangePasswordSerializers, sendPasswordResetEmailSerializer, UserResetPasswordSerializers
 from django.contrib.auth import authenticate
 from .renderers import UserRenderers
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -75,3 +75,21 @@ class UserChangePasswordView(APIView):
         return Response({'status': 'error', 'msg' : 'Failed to Change Password', 'error' : serializer_data.errors}, status=status.HTTP_400_BAD_REQUEST)      
 
 
+# Send Password Reset Email view
+class UserSendPasswordResetEmailView(APIView):
+    renderer_classes = [UserRenderers]
+    def post(self, request, format=None):
+        serializer_data = sendPasswordResetEmailSerializer(data= request.data)      
+        if serializer_data.is_valid(raise_exception=True):
+            return Response({'status': 'success', 'msg': 'Password Reset Link Send. Please Check Your Email', 'data' : serializer_data.data}, status=status.HTTP_200_OK)
+        return Response({'status': 'error', 'msg' : 'Failed to Send Reset Password Link', 'error' : serializer_data.errors}, status=status.HTTP_400_BAD_REQUEST)      
+ 
+
+# User Password Reset View
+class UserPasswordResetView(APIView):
+    renderer_classes = [UserRenderers]
+    def post(self, request, uid, token, format=None):
+        serializer_data = UserResetPasswordSerializers(data=request.data, context={"uid":uid, "token":token})
+        if serializer_data.is_valid(raise_exception=True):
+            return Response({'status': 'success', 'msg': 'Password Reset Successfully', 'data' : serializer_data.data}, status=status.HTTP_200_OK)
+        return Response({'status': 'error', 'msg' : 'Failed to Reset Password', 'error' : serializer_data.errors}, status=status.HTTP_400_BAD_REQUEST)      
