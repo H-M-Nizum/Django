@@ -1,0 +1,47 @@
+####### 1. Install Redis Open Source on Ubuntu or Debian Linux using APT
+
+    sudo apt-get install lsb-release curl gpg
+    curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+    sudo chmod 644 /usr/share/keyrings/redis-archive-keyring.gpg
+    echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+    sudo apt-get update
+    sudo apt-get install redis
+
+###### 2. Start, Stop, Enable, Disable And Restart
+
+    sudo systemctl enable redis
+OR  sudo systemctl enable redis-server (Recomended)
+OR  sudo systemctl enable redis.service
+
+    sudo systemctl disable redis
+OR  sudo systemctl disable redis-server (Recomended)
+OR  sudo systemctl disable redis.service
+
+    sudo systemctl start redis
+OR  sudo systemctl start redis-server (Recomended)
+OR  sudo systemctl start redis.service
+
+    sudo systemctl stop redis
+OR  sudo systemctl stop redis-server (Recomended)
+OR  sudo systemctl stop redis.service
+
+    sudo systemctl restart redis
+OR  sudo systemctl restart redis-server (Recomended)
+OR  sudo systemctl restart redis.service
+
+
+###### 3. Redis Version Check
+
+    redis-cli --version
+
+
+###### 4. Redis Status Check 
+
+    sudo systemctl status redis
+OR  sudo systemctl status redis-server (Recomended)
+OR  sudo systemctl status redis.service
+
+
+##### 5. Go to Redis Cli or shell
+
+    redis-cli

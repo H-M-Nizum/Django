@@ -1,0 +1,266 @@
+###################################################################################################
+##########################              List Command list               ###########################
+
+
+1. LPUSH        ==> LPUSH key element OR LPUSH key element [element ...]
+Prepends one or more elements to a list. Creates the key if it doesn't exist.
+Insert all the specified values at the << head of the list >> stored at key.
+    127.0.0.1:6379> lpush subjects CSE      (Single Push in head)
+    (integer) 1
+    127.0.0.1:6379> lpush subjects EEE      (Single Push in head)
+    (integer) 2
+    127.0.0.1:6379> llen subjects           (Get List Len)
+    (integer) 2
+    127.0.0.1:6379> lrange subjects 0 -1    (Get List Based on Range)
+    1) "EEE"
+    2) "CSE"
+    127.0.0.1:6379> lpush subjects ITC Bangal English Math      (Multiple Push in head)
+    (integer) 6
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "Math"
+    2) "English"
+    3) "Bangal"
+    4) "ITC"
+    5) "EEE"
+    6) "CSE"
+
+
+2. RPUSH        ==> RPUSH key element OR RPUSH key element [element ...]
+Appends one or more elements to a list. Creates the key if it doesn't exist.
+Insert all the specified values at the << tail of the list >> stored at key. 
+    127.0.0.1:6379> rpush subjects ITC      (Single Push in Tail)
+    (integer) 3
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+    3) "ITC"
+    127.0.0.1:6379> rpush subjects Bangla English       (Multiple Push in Tail)
+    (integer) 5
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+    3) "ITC"
+    4) "Bangla"
+    5) "English"
+
+
+3. LPOP         ==> LPOP key OR LPOP key [count]
+Returns the first elements in a list after removing it. Deletes the list if the last element was popped.
+By default, the command pops a single element from the beginning of the list. 
+When provided with the optional count argument, the reply will consist of up to count elements, 
+depending on the list's length.
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "Math"
+    2) "English"
+    3) "Bangal"
+    4) "ITC"
+    5) "EEE"
+    6) "CSE"
+    127.0.0.1:6379> lpop subjects       (Single Pop in head)
+    "Math"
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "English"
+    2) "Bangal"
+    3) "ITC"
+    4) "EEE"
+    5) "CSE"
+    127.0.0.1:6379> lpop subjects 3     (Multiple Pop in head)
+    1) "English"
+    2) "Bangal"
+    3) "ITC"
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+
+
+4. RPOP         ==> RPOP key OR RPOP key [count]
+Returns and removes the last elements of a list. Deletes the list if the last element was popped.
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+    3) "ITC"
+    4) "Bangla"
+    5) "English"
+    127.0.0.1:6379> rpop subjects       (Single Pop in Tail)
+    "English"
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    4) "Bangle"
+    127.0.0.1:6379> rpop subjects 2     (Multiple Pop in Tail)
+    1) "Bangle"
+    2) "ICT"
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+
+
+5. LLEN         ==> LLEN key
+Returns the length of a list.
+    127.0.0.1:6379> llen subjects           (Get List Len)
+    (integer) 2
+
+6. LRANGE           ==> LRANGE key start stop
+Returns a range of elements from a list.
+    127.0.0.1:6379> lrange subjects 0 -1        (Get List Based on Range - -1 means last index) start stop
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    4) "Bangle"
+    127.0.0.1:6379> lrange subjects 0 2         (Get index 0 to 2 value)
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    127.0.0.1:6379> lrange subjects 0 1         (Get index 0 to 1 value)
+    1) "EEE"
+    2) "CSE"
+    127.0.0.1:6379> lrange subjects 0 4         (Get index 0 to 4 value 4 is out of range so get 0 to 3)
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    4) "Bangle"
+    127.0.0.1:6379> lrange subjects 0 3         (Get index 0 to 3 value)
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    4) "Bangle"
+
+
+
+7. LINDEX       ==> LINDEX key index
+Returns an element from a list by its index.Returns the element at index index in the list stored at key. 
+The index is zero-based, so 0 means the first element, 
+    127.0.0.1:6379> lrange subjects 0 3
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    4) "Bangle"
+    127.0.0.1:6379> lindex subjects 0
+    "EEE"
+    127.0.0.1:6379> lindex subjects 2
+    "ICT"
+    127.0.0.1:6379> lindex subjects 5
+    (nil)
+    127.0.0.1:6379> lindex subjects -1       (Like python -1 means last index)
+    "Bangle"
+
+
+8. LSET            ==> LSET key index element
+Sets the value of an element in a list by its index. If Index exist then overwrite this index value
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    4) "Bangle"
+    127.0.0.1:6379> lset subjects 3 English
+    OK
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    4) "English"
+    127.0.0.1:6379> lset subjects 6 English
+    (error) ERR index out of range
+    127.0.0.1:6379> 
+
+9. LPUSHX          ==> LPUSHX key element OR LPUSHX key element [element ...]
+Prepends one or more elements to a list only when the list exists.
+Inserts specified values at the head of the list stored at key, only if key already exists and holds a list. 
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "CSE"
+    3) "ICT"
+    4) "English"
+    127.0.0.1:6379> lpushx subjects Math Physics
+    (integer) 6
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "Physics"
+    2) "Math"
+    3) "EEE"
+    4) "CSE"
+    5) "ICT"
+    6) "English"
+    127.0.0.1:6379> lpushx student sakib rakib akib           (lpushx only work if list already exist)
+    (integer) 0
+
+10. LINSERT             ==> LINSERT key <BEFORE | AFTER> pivot element
+Inserts an element before or after another element in a list.
+nserts element in the list stored at key either before or after the reference value pivot.
+When key does not exist, it is considered an empty list and no operation is performed.
+An error is returned when key exists but does not hold a list value.
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "BIO"
+    3) "CSE"
+    4) "English"
+    127.0.0.1:6379> linsert subjects before English NLP
+    (integer) 8
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "BIO"
+    3) "CSE"
+    4) "NLP"
+    5) "English"
+    127.0.0.1:6379> linsert subjects before ML NLP
+    (integer) -1
+    127.0.0.1:6379> lrange subjects 0 -1
+    1) "EEE"
+    2) "BIO"
+    3) "CSE"
+    4) "NLP"
+    5) "English"
+
+
+11. BLMOVE
+Pops an element from a list, pushes it to another list and returns it. 
+Blocks until an element is available otherwise. Deletes the list if the last element was moved.
+
+
+12. BLMPOP
+Pops the first element from one of multiple lists. Blocks until an element is available otherwise. 
+Deletes the list if the last element was popped.
+
+13. BLPOP
+Removes and returns the first element in a list. Blocks until an element is available otherwise. 
+Deletes the list if the last element was popped.
+
+14. BRPOP
+Removes and returns the last element in a list. Blocks until an element is available otherwise. 
+Deletes the list if the last element was popped.
+
+15. BRPOPLPUSH
+Pops an element from a list, pushes it to another list and returns it. 
+Block until an element is available otherwise. Deletes the list if the last element was popped.
+
+
+16. LPOS
+Returns the index of matching elements in a list.
+
+
+17. LMOVE
+Returns an element after popping it from one list and pushing it to another. 
+Deletes the list if the last element was moved.
+
+18. LMPOP
+Returns multiple elements from a list after removing them. Deletes the list if the last element was popped.
+
+
+19. LREM
+Removes elements from a list. Deletes the list if the last element was removed.
+
+
+20. LTRIM
+Removes elements from both ends a list. Deletes the list if all elements were trimmed.
+
+
+21. RPOPLPUSH
+Returns the last element of a list after removing and pushing it to another list. 
+Deletes the list if the last element was popped.
+
+
+22. RPUSHX
+Appends an element to a list only when the list exists.
+
+
+###################################################################################################

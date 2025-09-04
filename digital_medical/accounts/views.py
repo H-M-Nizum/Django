@@ -8,6 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import AuthenticationFailed
 from .models import User
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 # Creating tokens manually
 def get_tokens_for_user(user):
@@ -92,4 +93,33 @@ class UserPasswordResetView(APIView):
         serializer_data = UserResetPasswordSerializers(data=request.data, context={"uid":uid, "token":token})
         if serializer_data.is_valid(raise_exception=True):
             return Response({'status': 'success', 'msg': 'Password Reset Successfully', 'data' : serializer_data.data}, status=status.HTTP_200_OK)
-        return Response({'status': 'error', 'msg' : 'Failed to Reset Password', 'error' : serializer_data.errors}, status=status.HTTP_400_BAD_REQUEST)      
+        return Response({'status': 'error', 'msg' : 'Failed to Reset Password', 'error' : serializer_data.errors}, status=status.HTTP_400_BAD_REQUEST)     
+
+
+# User Logout
+
+class UserLogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [UserRenderers]
+
+    def post(self, request, *args, **kwargs):
+        try:
+            refresh_token = request.data.get("refresh")
+            if refresh_token is None:
+                return Response(
+                    {"status": "error", "msg": "Refresh token is required"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            token = RefreshToken(refresh_token)
+            token.blacklist()  # Invalidate the refresh token
+
+            return Response(
+                {"status": "success", "msg": "Logged out successfully"},
+                status=status.HTTP_205_RESET_CONTENT,
+            )
+        except TokenError:
+            return Response(
+                {"status": "error", "msg": "Invalid or expired token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )

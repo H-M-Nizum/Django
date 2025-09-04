@@ -1,0 +1,220 @@
+##### 1. Go to Redis Cli or shell
+    Inspiron-5567:~# redis-cli
+    127.0.0.1:6379> 
+
+
+##### 2. Check Redis Enable or not 
+    127.0.0.1:6379> PING 
+    PONG
+
+##### 3. Get All keys 
+    127.0.0.1:6379> keys *
+    1) "age"
+    2) "email"
+
+
+##### 4. Check Key is store or not
+    127.0.0.1:6379> keys name
+    (empty array)
+    127.0.0.1:6379> set name Nizum
+    OK
+    127.0.0.1:6379> keys name
+    1) "name"
+
+
+##### 5. Delete Any Key with value 
+    127.0.0.1:6379> keys email
+    1) "email"
+    127.0.0.1:6379> del email
+    (integer) 1
+    127.0.0.1:6379> keys email
+    (empty array)
+
+
+##### 6. Check Any Key Exist or not
+    127.0.0.1:6379> exists name
+    (integer) 1
+    127.0.0.1:6379> exists email
+    (integer) 0
+
+
+##### 7. Set Expire time for any existing key
+##### 8. If i want to get Existing Expire time
+    127.0.0.1:6379> keys *
+    1) "name"
+    2) "age"
+    3) "email"
+    127.0.0.1:6379> expire email 50 (Here 50 means 50 second)
+    (integer) 1
+    127.0.0.1:6379> ttl email
+    (integer) 42
+    127.0.0.1:6379> ttl email
+    (integer) 3
+    127.0.0.1:6379> ttl email
+    (integer) -2
+    127.0.0.1:6379> keys *
+    1) "name"
+    2) "age"
+
+
+##### 9. Rename Key
+    127.0.0.1:6379> keys *
+    1) "name"
+    2) "age"
+    127.0.0.1:6379> rename age Age
+    OK
+    127.0.0.1:6379> keys *
+    1) "name"
+    2) "Age"
+    127.0.0.1:6379> 
+
+
+##### 10. If i want to remove all key
+
+    127.0.0.1:6379> keys *
+    1) "Age"
+    2) "name"
+    3) "roll"
+    127.0.0.1:6379> flushall
+    OK
+    127.0.0.1:6379> keys *
+    (empty array)
+    127.0.0.1:6379> 
+
+###################################################################################################
+########################              String Command list               ###########################
+1) APPEND
+Appends a string to the value of a key. Creates the key if it doesn't exist.
+    127.0.0.1:6379> get name
+    "H.M."
+    127.0.0.1:6379> append name Nizum
+    (integer) 9
+    127.0.0.1:6379> get name
+    "H.M.Nizum"
+
+2) DECR
+Decrements the integer value of a key by one. Uses 0 as initial value if the key doesn't exist.
+3) INCR
+Increments the integer value of a key by one. Uses 0 as initial value if the key doesn't exist.
+    127.0.0.1:6379> get age
+    "26"
+    127.0.0.1:6379> decr age
+    (integer) 25
+    127.0.0.1:6379> incr age
+    (integer) 26
+
+4) DECRBY
+Decrements a number from the integer value of a key. Uses 0 as initial value if the key doesn't exist.
+5) INCRBY
+Increments the integer value of a key by a number. Uses 0 as initial value if the key doesn't exist.
+    127.0.0.1:6379> get age
+    "30"
+    127.0.0.1:6379> incrby age 5
+    (integer) 35
+    127.0.0.1:6379> decrby age 13
+    (integer) 22
+    127.0.0.1:6379> get age
+    "22"
+
+6) GET
+Returns the string value of a key.
+    127.0.0.1:6379> get age
+    "30"
+
+7 GETDEL
+Returns the string value of a key after deleting the key.
+
+8. GETEX
+Returns the string value of a key after setting its expiration time.
+
+9. GETRANGE
+Returns a substring of the string stored at a key.
+
+10. GETSET
+Returns the previous string value of a key after setting it to a new value.
+
+
+11. INCRBYFLOAT
+Increment the floating point value of a key by a number. Uses 0 as initial value if the key doesn't exist.
+
+12. LCS
+Finds the longest common substring.
+
+13. MGET
+Atomically returns the string values of one or more keys.
+
+14) MSET
+Atomically creates or modifies the string values of one or more keys.
+    127.0.0.1:6379> mset name Nizum age 26 phone 01981251861 email hmnizum1714032@gmail.com
+    OK
+    127.0.0.1:6379> keys *
+    1) "name"
+    2) "age"
+    3) "phone"
+    4) "email"
+
+15. MSETNX
+Atomically modifies the string values of one or more keys only when all keys don't exist.
+
+16. PSETEX
+Sets both string value and expiration time in milliseconds of a key. The key is created if it doesn't exist.
+
+17) SET
+Sets the string value of a key, ignoring its type. The key is created if it doesn't exist.
+    127.0.0.1:6379> mset name Nizum age 26 phone 01981251861 email hmnizum1714032@gmail.com
+    OK
+    127.0.0.1:6379> keys *
+    1) "name"
+    2) "age"
+    3) "phone"
+    4) "email"
+
+18) SETEX
+Sets the string value and expiration time of a key. Creates the key if it doesn't exist.
+    127.0.0.1:6379> setex university 50 IU
+    OK
+    127.0.0.1:6379> get university
+    "IU"
+    127.0.0.1:6379> ttl university
+    (integer) 37
+    127.0.0.1:6379> ttl university
+    (integer) 6
+    127.0.0.1:6379> ttl university
+    (integer) -2
+    127.0.0.1:6379> get university
+    (nil)
+
+19) SETNX
+Set the string value of a key only when the key doesn't exist. 
+Normally, if a key already exists and I set its value again, the new value will overwrite the old one. 
+But what I want is: if the key already exists, just skip it; otherwise, set a new key–value pair. (setnx)
+
+    127.0.0.1:6379> get roll
+    "12"
+    127.0.0.1:6379> set roll 23
+    OK
+    127.0.0.1:6379> get roll
+    "23"
+    127.0.0.1:6379> setnx roll 34
+    (integer) 0
+    127.0.0.1:6379> get roll
+    "23"
+
+20. SETRANGE
+Overwrites a part of a string value with another by an offset. Creates the key if it doesn't exist.
+
+21) STRLEN
+Returns the length of a string value.
+    127.0.0.1:6379> get name
+    "H.M.Nizum"
+    127.0.0.1:6379> strlen name
+    (integer) 9
+
+
+22. SUBSTR
+Returns a substring from a string value.
+
+
+###################################################################################################
+
+
