@@ -1,0 +1,65 @@
+===================================================================================================
+====================================== Task Enqueue Function ======================================
+1. apply_async()
+This function is used to enqueue task for asynchronous execution. 
+This function gives more control over the task execution by allowing to set various options explicitly.
+It returns AsyncResult object which can be used to track the status and result of the task. 
+Syntax:-
+    result = my_task.apply_async(args=[arg1, arg2], kwargs={'keyword_arg': 'value'}, countdown=10, expires=60)
+
+args: A list of positional arguments to pass to the task function.
+kwargs: A dictionary of keyword arguments to pass to the task function.
+countdown: The number of seconds to delay the task execution from the current tim 
+expires:    The maximum time (in seconds) until the task is considered expired 
+            and will not be executed if it hasn't started yet.
+
+
+2. delay()
+This function is used to enqueue task for asynchronous execution. 
+This function is a shorthand for calling apply_async() with default options, 
+    making it more convenient for simple task enqueuing.
+It returns AsyncResult object which can be used to track the status and result of the task. 
+Syntax:-
+    result = my_task.delay(arg1, arg2, keyword_arg='value')
+The arguments are provided directly as positional arguments to the task function. 
+Keyword arguments are provided as regular function keyword arguments.
+
+
+
+------------------------------------ AsyncResult Attributes -----------------------
+1. result: 
+    The result of the task if it has completed successfully. 
+    You can access the task's return value using result.result.
+
+2. state: 
+    The current state of the task. It can have various values 
+    such as "PENDING", "STARTED", "SUCCESS", "FAILURE", "RETRY", etc.
+
+3. status: 
+    The current state of the task. It can have various values 
+    such as "PENDING", "STARTED", "SUCCESS", "FAILURE", "RETRY", etc.
+
+4. task_id: 
+    The unique identifier of the task.
+
+5. id: 
+    Same as task_id, this attribute holds the unique identifier of the task.
+
+6. expires: 
+    The timestamp when the task is considered expired (if it hasn't started yet) This is set as a UTC datetime object.
+
+
+---------------------------------- AsyncResult Method() -------------------------------------------
+1. ready(): 
+    Returns True if the task has completed its execution and the result is available. Otherwise, it returns False.
+
+2. successful(): 
+    Returns True if the task has completed successfully (without raising an exception). Otherwise, it returns False.
+
+3. failed(): 
+    Returns True if the task has failed (raised an exception). Otherwise, it returns False.
+
+4. get(): 
+    Retrieves the result of the task. If the task is still running or hasn't started yet, 
+    it will block until the result is available. 
+    You can also pass a timeout argument to specify the maximum time to wait for the result.

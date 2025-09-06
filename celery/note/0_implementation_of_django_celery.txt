@@ -1,0 +1,14 @@
+1. Create Virtual Environment – virtualenv venv
+2. Install Django – pip install django
+3. Install Celery - pip install celery
+4. Install Redis/RabbitMQ – pip install redis
+5. Create Django Project and Apps
+6. Create celery.py inside inner project folder then write basic config code
+7. Configure Django Celery in settings.py File
+8. Create tasks.py file inside Apps then write task
+9. To trigger celery task, mention task inside views or other part of code where it is needed
+10. Start Celery Worker
+
+
+
+
