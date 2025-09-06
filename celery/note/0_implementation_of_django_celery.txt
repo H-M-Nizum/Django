@@ -10,5 +10,7 @@
 10. Start Celery Worker
 
 
+========================= Documentation ====================================
 
+1. Official - https://docs.celeryq.dev/en/v5.5.3/django/first-steps-with-django.html
 
