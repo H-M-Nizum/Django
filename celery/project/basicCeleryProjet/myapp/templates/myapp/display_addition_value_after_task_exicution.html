@@ -2,6 +2,32 @@
 {% block title %}Display Task Result{% endblock %}
 
 {% block content %}
-    <h1>Welcome to the Page That Display Task Result After Task Exicution</h1>
-    <p>This is the main landing page of your Django site.</p>
+    <h1>Task is running...</h1>
+    <p id="task-result">Waiting for result...{{ task_id}}</p>
+    <div id="result-container"></div>
+
+
+
+    <script>
+        function checkTask() {
+            fetch("/get-task-result/{{ task_id }}/")
+                .then(response => response.json())
+                .then(data => {
+                    console.log("response data : ", data)
+                    if (data.status === "done") {
+                        let output = "<ul>";
+                        for (let key in data.result) {
+                            output += `<li><strong>${key}:</strong> ${data.result[key]}</li>`;
+                        }
+                        output += "</ul>";
+
+                        document.getElementById("result-container").innerHTML = output;
+                        document.getElementById("task-result").innerText = data.result.result;
+                    } else {
+                        setTimeout(checkTask, 2000); // check again in 2s
+                    }
+                });
+        }
+        checkTask();
+    </script>
 {% endblock %}
