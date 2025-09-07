@@ -10,6 +10,8 @@
 10. Start Celery Worker
 
 
+11. Run or Start Celery Worker - celery -A proj worker -l INFO
+
 ========================= Documentation ====================================
 
 1. Official - https://docs.celeryq.dev/en/v5.5.3/django/first-steps-with-django.html
