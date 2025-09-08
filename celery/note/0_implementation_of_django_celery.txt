@@ -10,7 +10,8 @@
 10. Start Celery Worker
 
 
-11. Run or Start Celery Worker - celery -A proj worker -l INFO
+11. Run or Start Celery Worker => celery -A proj worker -l INFO
+12. Run or start BEAT for periodic task (schedular task) => celery -A proj beat -l INFO
 
 ========================= Documentation ====================================
 
