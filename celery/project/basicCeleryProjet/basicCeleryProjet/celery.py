@@ -24,3 +24,40 @@ app.autodiscover_tasks()
 # @app.task(bind=True, ignore_result=True)
 # def debug_task(self):
 #     print(f'Request: {self.request!r}')
+
+
+# # =======================================================================
+# # # # ========== Schedular task setting way 2 incelery.py ========
+# # =====================================================================
+# # # Need to run django server, celery server with also beat server
+# app.conf.beat_schedule = {
+#     'every-10-seconds' : {
+#         'task' : 'myapp.tasks.clear_session_cache',
+#         'schedule' : 10 ,
+#         'args' : ('1001', )
+#     }
+#     # Add more coma seperate periodic task as needed
+# }
+
+
+# # # Using timedelta set scheduler time
+# from datetime import timedelta
+# app.conf.beat_schedule = {
+#     'every-20-seconds' : {
+#         'task' : 'myapp.tasks.clear_session_cache',
+#         'schedule' : timedelta(seconds=20),
+#         'args' : ('1001', )
+#     }
+#     # Add more coma seperate periodic task as needed
+# }
+
+# # Using crontab set scheduler time (Advance)
+from celery.schedules import crontab
+app.conf.beat_schedule = {
+    'every-60-seconds' : {
+        'task' : 'myapp.tasks.clear_session_cache',
+        'schedule' : crontab(minute='*/1'),
+        'args' : ('1001', )
+    }
+    # Add more coma seperate periodic task as needed
+}

@@ -143,14 +143,14 @@ CELERY_RESULT_BACKEND = 'django-db'
 # Enable Extended Task Result attributes (name, args, kwargs, worker, retries, queue, delivery info) to the written to backend.
 CELERY_RESULT_EXTENDED = True
 
-# # Schedular task setting way 1
-# Need to run django server, celery server with also beat server
-CELERY_BEAT_SCHEDULE = {
-    'every-10-seconds' : {
-        'task' : 'myapp.tasks.clear_session_cache',
-        'schedule' : 10 ,
-        'args' : ('1001', )
-    }
-    # Add more coma seperate periodic task as needed
-}
+# # # Schedular task setting way 1
+# # Need to run django server, celery server with also beat server
+# CELERY_BEAT_SCHEDULE = {
+#     'every-10-seconds' : {
+#         'task' : 'myapp.tasks.clear_session_cache',
+#         'schedule' : 10 ,
+#         'args' : ('1001', )
+#     }
+#     # Add more coma seperate periodic task as needed
+# }
 
