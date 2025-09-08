@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_results',
     'myapp',
 ]
 
@@ -127,11 +128,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # ====================================================================================================
 # ========================================== Celery Setting ==========================================
 
+# set the celery timezone
+CELERY_TIMEZONE = "Asia/Dhaka"
+
 # set the celery broker url
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 
-# set the celery result backend
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+# set the celery result backend with Redis
+# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
 
-# set the celery timezone
-CELERY_TIMEZONE = "Asia/Dhaka"
+# set the celery result backend with django-db
+CELERY_RESULT_BACKEND = 'django-db'
+
+# Enable Extended Task Result attributes (name, args, kwargs, worker, retries, queue, delivery info) to the written to backend.
+CELERY_RESULT_EXTENDED = True
+
