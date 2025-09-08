@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_results',
+    'django_celery_beat',
     'myapp',
 ]
 
@@ -154,3 +155,7 @@ CELERY_RESULT_EXTENDED = True
 #     # Add more coma seperate periodic task as needed
 # }
 
+
+
+# # Using custom scheduler classes
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'

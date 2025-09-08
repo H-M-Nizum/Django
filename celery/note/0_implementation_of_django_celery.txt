@@ -12,6 +12,20 @@
 
 11. Run or Start Celery Worker => celery -A proj worker -l INFO
 12. Run or start BEAT for periodic task (schedular task) => celery -A proj beat -l INFO
+13. Using Custom Celery BEAT
+    1) Use pip to install the package: pip install django-celery-beat
+    2) Add the django_celery_beat module to INSTALLED_APPS in your Django project’ settings.py:
+            INSTALLED_APPS = (
+                ...,
+                'django_celery_beat',
+            )
+    3) Apply Django database migrations so that the necessary tables are created:
+            python manage.py migrate
+    4) Start the celery beat service using the django_celery_beat.schedulers:DatabaseScheduler scheduler:
+
+            celery -A proj beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+            
+        Note: You may also add this as the beat_scheduler setting directly.
 
 ========================= Documentation ====================================
 
