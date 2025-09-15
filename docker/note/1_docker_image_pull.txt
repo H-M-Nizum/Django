@@ -1,0 +1,18 @@
+1)  Search Docker images From Docker Hub
+        >> docker search hello-world
+            Note - Search anything that i need for Docker Hub
+
+
+2)  Docker image pull - Download an image from a registry
+        Usage:  >>> docker image pull [OPTIONS] NAME[:TAG|@DIGEST]
+        Aliases:    >> docker pull
+        Exmaple:-
+            >>> docker pull hello-world
+            >>> docker pull hello-world:linux
+
+3) Remove Image
+    >>> docker rmi image_name / image_id        (ex: docker rmi fd484f19954f)
+    Note - Error: Conflict, cannot delete image fd484f19954f because it is tagged in multiple repositories, 
+    use -f to force 2013/12/11 05:47:16 Error: failed to remove one or more images
+
+    >>> docker rmi -f image_name / image_id      (ex: docker rmi -f fd484f19954f)

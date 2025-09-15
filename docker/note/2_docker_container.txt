@@ -1,0 +1,88 @@
+1) List all container - >>> docker container ls
+    Aliases - 
+        >>> docker container list
+        >>> docker container ps
+        >>> docker ps (Short and Mostly use)
+    
+    Default Show Just Running container. If i want to show All container
+    >>> docker ps -a		Show all containers (default shows just running)
+
+2) Create and run a new container from an image
+    >>> docker run IMAGE:TAG    (ex: docker run hello-world:linux)
+
+3) Inspect Container for Container details
+    >>> docker inspect docker_id       (ex: docker inspect 7584ce3b1a9f)
+
+4) Create and run a new container from an image with custom container name
+    >> docker run --name custom_name IMAGE:TAG        (ex: docker run --name hello-c1 hello-world:linux)
+
+5) Run container in background and print container ID
+    >> docker run --name custom_name -d IMAGE:TAG        (ex: docker run --name hello-c2 -d hello-world:linux)
+
+6) Run Container in interactive mode (	Keep STDIN open even if not attached [-i], Allocate a pseudo-TTY [-t])
+    >> docker run --name custom_name -it -d IMAGE:TAG        (ex: docker run --name hello-c3 -it -d python:3.9.23-slim)
+
+    /***
+        root@root-Inspiron-5567:~$ docker run --name hello-c3 -it -d python:3.9.23-slim
+        51d55ceccf2313b647fbf9a0ae84e9b46beee07d0ca329d812af1e996c1fc84d
+        root@root-Inspiron-5567:~$ docker ps -a
+        CONTAINER ID   IMAGE                COMMAND     CREATED          STATUS                      PORTS     NAMES
+        51d55ceccf23   python:3.9.23-slim   "python3"   4 seconds ago    Up 3 seconds                          hello-c3
+        af88ed94a4df   hello-world:linux    "/hello"    12 minutes ago   Exited (0) 12 minutes ago             hello-c2
+    ***/
+
+7) Execute a command in a running container
+    >>> docker container exec [OPTIONS] CONTAINER COMMAND [ARG...]
+    Aliases
+        >>> docker exec
+    
+    Exmaple : docker exec -it container_name COMMAND    (ex: docker exec -it python-c1 python)
+    Open Python shell 
+        /***
+            root@root-Inspiron-5567:~$ docker exec -it python-c1 python
+            Python 3.9.23 (main, Sep  8 2025, 21:40:14) 
+            [GCC 14.2.0] on linux
+            Type "help", "copyright", "credits" or "license" for more information.
+            >>> 
+        ***/
+
+8) If i run directly without background running
+    >>> docker run --name custom_name -it IMAGE:TAG        (ex: docker run --name python-c2 -it python:3.9.23-slim)
+
+9) If i create container and after work automitically remove this container - 
+    Automatically remove the container and its associated anonymous volumes when it exits.
+    >>> docker run --name custom_name -it --rm IMAGE:TAG        (ex: docker run --name python-c3 -it --rm python:3.9.23-slim)
+
+    /***
+        root@root-Inspiron-5567:~$ docker run --name python-c3 -it --rm python:3.9.23-slim
+        Python 3.9.23 (main, Sep  8 2025, 21:40:14) 
+        [GCC 14.2.0] on linux
+        Type "help", "copyright", "credits" or "license" for more information.
+        >>> 3 +5
+        8
+        >>> exit()
+        root@root-Inspiron-5567:~$ docker ps -a
+        CONTAINER ID   IMAGE                COMMAND     CREATED             STATUS                         PORTS     NAMES
+        5ef2e882be4f   python:3.9.23-slim   "python3"   About an hour ago   Up About an hour                         python-c1
+    ***/
+
+10) Stop one or more running containers
+    >>> docker stop my_container    (ex: docker stop python-c1)
+
+11) Start one or more stopped containers
+    >>> docker start my_container    (ex: docker start python-c1)
+
+12) Restart one or more containers
+    >>> docker restart my_container    (ex: docker restart python-c1)
+
+13) Rename a container
+    >>> docker rename my_container my_new_container    (ex: docker rename python-c1 python-container1)
+
+14) Remove one or more containers
+    >>> docker rm container_name        (ex: docker rm hello-c1)
+
+15) Remove all stopped containers
+    >>> docker container prune
+
+16) Docker Logs Check - Fetch the logs of a container
+    >>> docker logs container_name
