@@ -1,0 +1,10 @@
+1) Start a mysql server instance
+    >>> docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:tag
+    EX >>> docker run --name mysql-c1 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:oraclelinux9
+
+2) Go to Mysql shell
+    >>> docker exec -it container_name mysql -u root -p
+    EX >>> docker exec -it mysql-c1 mysql -u root -p
+
+3) Show All Database
+    >>> show databases;

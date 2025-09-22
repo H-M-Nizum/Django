@@ -71,6 +71,8 @@
 
 11) Start one or more stopped containers
     >>> docker start my_container    (ex: docker start python-c1)
+    >>> docker start -a my_container
+    👉 The -a (attach) flag makes it show logs in the terminal. Without -a, it will start silently in the background.
 
 12) Restart one or more containers
     >>> docker restart my_container    (ex: docker restart python-c1)

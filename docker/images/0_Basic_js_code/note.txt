@@ -1,0 +1,28 @@
+1) Generate a package.json file.
+    >>> npm init -y
+    Make sure the start script looks like this in package.json file
+    {
+        "name": "serial-app",
+        "version": "1.0.0",
+        "main": "app.js",
+        "scripts": {
+            "start": "node app.js"
+        }
+    }
+
+2) Create Dockerfile
+
+3) Build Docker Image (From the same directory where Dockerfile exists)
+    >>> docker build -t image_name:tag .
+    i. docker build => This is the command to build a Docker image from a Dockerfile.
+    ii. -t => (short for tag)
+    iii. Build a Docker image using the Dockerfile in the current folder (.)
+
+    Ex >>> docker build -t basic-js-app:v1 .
+
+4) Run or create Docker Container
+    >>> docker run --name container_name -it image_name:tag
+    EX >>> docker run --name basic-js-app-c1 -it basic-js-app:v1
+
+    >>> docker run --name container_name --rm image_name:tag
+    the --rm flag means: 👉 Automatically remove the container when it exits.
