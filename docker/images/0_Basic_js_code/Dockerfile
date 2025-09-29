@@ -10,7 +10,7 @@ COPY package*.json ./
 # Install dependencies (none in this case, but good practice)
 RUN npm install
 
-# Copy the rest of the project
+# Copy the rest of the project >>> COPY <source> <destination>
 COPY . .
 
 # Run app
