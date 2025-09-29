@@ -1,0 +1,19 @@
+## There Are Four Type of Variable
+    1) User Define Variable
+    2) System Variable
+    3) Speical Variable ($0, $1, $@)
+    4) Arrays
+
+📒 Notes: Variable Declaration and Usage in Bash
+
+1) Declaring a variable (no spaces around =)
+        name="Alice"
+
+2) Accessing a variable
+        echo $name
+
+3) Reading input into a variable
+        read name
+
+4) Always use double quotes when printing
+        echo "My name is $name"

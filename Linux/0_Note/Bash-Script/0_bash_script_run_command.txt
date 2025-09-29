@@ -1,0 +1,8 @@
+1) Bash script file name example:
+    >>> script1.sh
+
+2) Make the script executable:
+    >>> chmod +x script1.sh
+
+3) Run the script:
+    >>> ./script1.sh
