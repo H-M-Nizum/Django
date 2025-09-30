@@ -1,0 +1,4 @@
+
+1) Image Create Command >>> docker build -t basic-react-app:v1.0 .
+2) Container Create and Run >>> docker run -p 5173:5173 --name bc-react-c1 basic-react-app:v1.0
+3) Run Existing Container >>> docker start bc-react-c1 and docker stop bc-react-c1
