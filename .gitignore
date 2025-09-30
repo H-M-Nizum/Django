@@ -2,3 +2,4 @@ env
 digital_medical/.env
 # Node.js dependencies
 node_modules/
+venv/
