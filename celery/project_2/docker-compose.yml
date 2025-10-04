@@ -1,0 +1,38 @@
+version: "3.8"
+
+# lists the separate containers (services) you want Compose to run. You have two services: redis and django
+services:
+  # redis is the service name.
+  # image: redis:8.0-alpine tells Docker to download and run the official Redis image
+  # No ports are exposed here, so Redis is only reachable from other services in the same Compose network (for example, from your django service using the hostname redis).
+  redis:
+    image: redis:8.0-alpine
+
+  django:
+    # container’s name to django. (Useful for easy identification.)
+    container_name: django
+    # build the django image from the ./dcelery folder (it expects a Dockerfile there).
+    build:
+      context: ./dcelery
+
+    #When the container starts, it will run Django’s development server and listen on port 8000 inside the container.
+    # 0.0.0.0 means “listen on all network interfaces” (so other containers and mapped host ports can reach it).
+    command: python manage.py runserver 0.0.0.0:8000
+
+    # your local ./dcelery folder is mapped into the container at /usr/src/app/.
+    volumes:
+      - ./dcelery:/usr/src/app/
+
+    # Maps host port 8001 to container port 8000.
+    ports:
+      - 8001:8000
+
+    # Sets environment variables inside the container:
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=0930jd30j9jd09j09j109fj01j9f
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+
+    # Docker Compose to start Redis before Django.
+    depends_on:
+      - redis
