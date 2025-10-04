@@ -45,3 +45,7 @@ OR  sudo systemctl status redis.service
 ##### 5. Go to Redis Cli or shell
 
     redis-cli
+
+#### 6. Exist Redis Cli
+
+        exit or quit

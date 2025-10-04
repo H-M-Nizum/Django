@@ -1,3 +1,5 @@
 1) Build Container Using Composer >>> docker compose up -d --build
 2) Down Composer >>> docker-compose down
 3) Check Log >>> docker-compose logs container_name
+
+4) Check All Log >>> docker compose logs -f

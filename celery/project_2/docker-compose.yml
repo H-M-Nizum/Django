@@ -1,5 +1,3 @@
-version: "3.8"
-
 # lists the separate containers (services) you want Compose to run. You have two services: redis and django
 services:
   # redis is the service name.
@@ -26,6 +24,29 @@ services:
     # Maps host port 8001 to container port 8000.
     ports:
       - 8001:8000
+
+    # Sets environment variables inside the container:
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=0930jd30j9jd09j09j109fj01j9f
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+
+    # Docker Compose to start Redis before Django.
+    depends_on:
+      - redis
+
+  celery:
+    # container’s name to celery. (Useful for easy identification.)
+    container_name: celery
+    # build the celery image from the ./dcelery folder (it expects a Dockerfile there).
+    build:
+      context: ./dcelery
+
+    command: celery --app=dcelery worker -l INFO
+
+    # your local ./dcelery folder is mapped into the container at /usr/src/app/.
+    volumes:
+      - ./dcelery:/usr/src/app/
 
     # Sets environment variables inside the container:
     environment:
