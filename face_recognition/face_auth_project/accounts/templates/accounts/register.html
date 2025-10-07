@@ -1,0 +1,162 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Register - Face Recognition Auth{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="mb-0"><i class="fas fa-user-plus"></i> Create accountst</h3>
+                <p class="mb-0 mt-2">Register with your face for secure accounts</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" id="registerForm">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Username *</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email *</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                <div class="text-danger small">{{ form.email.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">First Name *</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}
+                                <div class="text-danger small">{{ form.first_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Last Name *</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}
+                                <div class="text-danger small">{{ form.last_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Password *</label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}
+                                <div class="text-danger small">{{ form.password1.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Confirm Password *</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}
+                                <div class="text-danger small">{{ form.password2.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="text-center mb-3">
+                        <h5><i class="fas fa-camera"></i> Capture Your Face</h5>
+                        <p class="text-muted small">Position your face in the oval and click capture</p>
+                    </div>
+
+                    <div id="video-container" class="mb-3">
+                        <video id="video" autoplay playsinline></video>
+                        <div class="video-overlay"></div>
+                    </div>
+                    <canvas id="canvas"></canvas>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success capture-btn" id="captureBtn">
+                            <i class="fas fa-camera"></i> Capture Face
+                        </button>
+                        <button type="button" class="btn btn-warning capture-btn" id="recaptureBtn" style="display:none;">
+                            <i class="fas fa-redo"></i> Recapture
+                        </button>
+                    </div>
+
+                    <div id="faceStatus" class="face-status" style="display:none;"></div>
+
+                    <input type="hidden" name="face_image" id="faceImageInput">
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p>Already have an accountst? <a href="{% url 'accounts:login' %}">Login here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const recaptureBtn = document.getElementById('recaptureBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const faceImageInput = document.getElementById('faceImageInput');
+    const faceStatus = document.getElementById('faceStatus');
+    const ctx = canvas.getContext('2d');
+
+    // Start video stream
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            console.error('Error accessing camera:', err);
+            alert('Could not access camera. Please allow camera access.');
+        });
+
+    // Capture face
+    captureBtn.addEventListener('click', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        
+        const imageData = canvas.toDataURL('image/jpeg');
+        faceImageInput.value = imageData;
+        
+        video.style.display = 'none';
+        canvas.style.display = 'block';
+        captureBtn.style.display = 'none';
+        recaptureBtn.style.display = 'inline-block';
+        submitBtn.disabled = false;
+        
+        faceStatus.style.display = 'block';
+        faceStatus.className = 'face-status face-detected';
+        faceStatus.innerHTML = '<i class="fas fa-check-circle"></i> Face captured successfully!';
+    });
+
+    // Recapture face
+    recaptureBtn.addEventListener('click', () => {
+        video.style.display = 'block';
+        canvas.style.display = 'none';
+        captureBtn.style.display = 'inline-block';
+        recaptureBtn.style.display = 'none';
+        submitBtn.disabled = true;
+        faceImageInput.value = '';
+        faceStatus.style.display = 'none';
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'accounts/base.html' %}
+
+{% block title %}Login - Face Recognition Auth{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h3 class="mb-0"><i class="fas fa-sign-in-alt"></i> Login</h3>
+                <p class="mb-0 mt-2">Authenticate with your face</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" id="loginForm">
+                    {% csrf_token %}
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Username *</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="text-center mb-3">
+                        <h5><i class="fas fa-face-smile"></i> Scan Your Face</h5>
+                        <p class="text-muted small">Position your face in the oval for accounts</p>
+                    </div>
+
+                    <div id="video-container" class="mb-3">
+                        <video id="video" autoplay playsinline></video>
+                        <div class="video-overlay"></div>
+                    </div>
+                    <canvas id="canvas"></canvas>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-success capture-btn" id="captureBtn">
+                            <i class="fas fa-camera"></i> Scan Face
+                        </button>
+                        <button type="button" class="btn btn-warning capture-btn" id="recaptureBtn" style="display:none;">
+                            <i class="fas fa-redo"></i> Retry
+                        </button>
+                    </div>
+
+                    <div id="faceStatus" class="face-status" style="display:none;"></div>
+
+                    <input type="hidden" name="face_image" id="faceImageInput">
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn" disabled>
+                            <i class="fas fa-lock-open"></i> Login with Face
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <p>Don't have an accountst? <a href="{% url 'accounts:register' %}">Register here</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const recaptureBtn = document.getElementById('recaptureBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const faceImageInput = document.getElementById('faceImageInput');
+    const faceStatus = document.getElementById('faceStatus');
+    const ctx = canvas.getContext('2d');
+
+    // Start video stream
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            video.srcObject = stream;
+        })
+        .catch(err => {
+            console.error('Error accessing camera:', err);
+            alert('Could not access camera. Please allow camera access.');
+        });
+
+    // Capture face
+    captureBtn.addEventListener('click', () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0);
+        
+        const imageData = canvas.toDataURL('image/jpeg');
+        faceImageInput.value = imageData;
+        
+        video.style.display = 'none';
+        canvas.style.display = 'block';
+        captureBtn.style.display = 'none';
+        recaptureBtn.style.display = 'inline-block';
+        submitBtn.disabled = false;
+        
+        faceStatus.style.display = 'block';
+        faceStatus.className = 'face-status face-detected';
+        faceStatus.innerHTML = '<i class="fas fa-check-circle"></i> Face captured! Click login to authenticate.';
+    });
+
+    // Recapture face
+    recaptureBtn.addEventListener('click', () => {
+        video.style.display = 'block';
+        canvas.style.display = 'none';
+        captureBtn.style.display = 'inline-block';
+        recaptureBtn.style.display = 'none';
+        submitBtn.disabled = true;
+        faceImageInput.value = '';
+        faceStatus.style.display = 'none';
+    });
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+    });
+</script>
+{% endblock %}

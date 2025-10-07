@@ -4,5 +4,7 @@ digital_medical/.env
 node_modules/
 venv/
 vend/
+dlib/
 __pycache__
 .env
+face_recognition/face_auth_project/README.md
